@@ -46,7 +46,7 @@ rgba8_t heat_lut(float x) {
     }
 }
 
-__device__ int clamp(int a, int a1, int a2, int min, int max)
+__device__ float clamp(float a, float a1, float a2, float min, float max)
 {
     float percentage = (a - a1) / (a1 - a2);
 
@@ -64,14 +64,14 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
         return;
 
     int n = 100;
-    int mx0 = clamp(x, 0, width, -2.5, 1);
-    int my0 = clamp(y, 0, height, -1, 1);
+    float mx0 = clamp(x, 0, width, -2.5, 1);
+    float my0 = clamp(y, 0, height, -1, 1);
 
     float mx = 0.0;
     float my = 0.0;
 
     int i = 0;
-    int mxtemp = 0;
+    float mxtemp = 0;
 
     while (mx * mx + my * my < 2 * 2 && i < n) {
         mxtemp = mx * mx - my * my + mx0;
