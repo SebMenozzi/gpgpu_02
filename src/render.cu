@@ -48,9 +48,9 @@ rgba8_t heat_lut(float x) {
 
 __device__ int clamp(int a, int a1, int a2, int min, int max)
 {
-    int percentage = (a - a2) / (a2 - a1);
+    int percentage = (a - a1) / (a1 - a2);
 
-    return percentage * (max - min) + min;
+    return percentage * (min - max) + min;
 }
 
 // Device code
