@@ -2,9 +2,6 @@
 #include <cstddef>
 #include <memory>
 
-
-
-
 /// \param buffer The RGBA24 image buffer
 /// \param width Image width
 /// \param height Image height
