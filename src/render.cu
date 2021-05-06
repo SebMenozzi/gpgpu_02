@@ -46,6 +46,11 @@ rgba8_t heat_lut(float x) {
     }
 }
 
+__device__ int clamp(int x, int a, int b)
+{
+    return max(a, min(b, x));
+}
+
 // Device code
 __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
     float denum = width * width + height * height;
@@ -57,8 +62,8 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
         return;
 
     int n = 100;
-    int mx0 = clamp(-2.5, 1);
-    int my0 = clamp(x, -1, 1);
+    int mx0 = clamp(x, -2.5, 1);
+    int my0 = clamp(y, -1, 1);
 
     float mx = 0.0;
     float my = 0.0;
@@ -66,7 +71,7 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
     int i = 0;
     int mxtemp = 0;
 
-    while (mx * mx + my * my < 2 * 2 && iteration < n) {
+    while (mx * mx + my * my < 2 * 2 && i < n) {
         mxtemp = mx * mx - my * my + mx0;
         my = 2 * mx * my + my0;
         mx = mxtemp;
