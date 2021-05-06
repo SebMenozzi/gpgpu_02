@@ -52,7 +52,6 @@ void write_png(
     fclose(fp);
 }
 
-
 // Usage: ./mandel
 int main(int argc, char** argv) {
     (void) argc;

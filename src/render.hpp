@@ -11,8 +11,6 @@
 extern "C"
 void render_cpu(char* buffer, int width, int height, std::ptrdiff_t stride, int n_iterations = 100);
 
-
-
 /// \param buffer The RGBA24 image buffer
 /// \param width Image width
 /// \param height Image height

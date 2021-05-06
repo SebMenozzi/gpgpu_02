@@ -56,18 +56,33 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
     if (x >= width || y >= height)
         return;
 
-    uchar4* lineptr = (uchar4*)(buffer + y * pitch);
-    float v = (x * x + y * y) / denum;
-    uint8_t grayv = v * 255;
+    int n = 100;
+    int mx0 = clamp(-2.5, 1);
+    int my0 = clamp(x, -1, 1);
 
-    lineptr[x] = {grayv, grayv, grayv, 255};
+    float mx = 0.0;
+    float my = 0.0;
+
+    int i = 0;
+    int mxtemp = 0;
+
+    while (mx * mx + my * my < 2 * 2 && iteration < n) {
+        mxtemp = mx * mx - my * my + mx0;
+        my = 2 * mx * my + my0;
+        mx = mxtemp;
+        ++i;
+    }
+
+    uchar4* lineptr = (uchar4*)(buffer + y * pitch);
+    uint8_t v = 255 * x / n;
+    lineptr[x] = {v, v, v, 255};
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations) {
     cudaError_t rc = cudaSuccess;
 
     // Allocate device memory
-    char*  devBuffer;
+    char* devBuffer;
     size_t pitch;
 
     rc = cudaMallocPitch(&devBuffer, &pitch, width * sizeof(rgba8_t), height);
@@ -84,7 +99,7 @@ void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int 
 
         dim3 dimBlock(bsize, bsize);
         dim3 dimGrid(w, h);
-        mykernel<<<dimGrid, dimBlock>>>(devBuffer, width, height, pitch);
+        mykernel <<< dimGrid, dimBlock >>> (devBuffer, width, height, pitch);
 
         if (cudaPeekAtLastError())
             abortError("Computation Error");
