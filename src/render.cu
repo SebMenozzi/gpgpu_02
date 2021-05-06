@@ -80,9 +80,9 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
         ++i;
     }
 
-    uchar4* lineptr = (uchar4*)(buffer + my * pitch);
+    uchar4* lineptr = (uchar4*)(buffer + y * pitch);
     uint8_t v = 255 * i / n;
-    lineptr[mx] = {v, v, v, 255};
+    lineptr[x] = {v, v, v, 255};
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations) {
