@@ -53,11 +53,6 @@ __device__ float clamp(float a, float a1, float a2, float min, float max)
     return percentage * (min - max) + min;
 }
 
-__device__ uint8_t clamp(uint8_t x, uint8_t a, uint8_t b)
-{
-  return max(a, min(b, x));
-}
-
 // Device code
 __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
     float denum = width * width + height * height;
@@ -86,8 +81,8 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
     }
 
     uchar4* lineptr = (uchar4*)(buffer + y * pitch);
-    uint8_t v = 255 * i / n;
-    lineptr[x] = heat_lut(clamp(v, 0, 1));
+    float v = 255 * i / n;
+    lineptr[x] = heat_lut(clamp(v, 0.0, 255.0, 0.0, 1.0));
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations) {
