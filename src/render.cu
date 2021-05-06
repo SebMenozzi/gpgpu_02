@@ -29,7 +29,7 @@ __device__ rgba8_t heat_lut(float x) {
     if (x < x0) {
         auto g = static_cast<std::uint8_t>(x / x0 * 255);
 
-        return rgba8_t{0, g, 0, 255};
+        return rgba8_t{0, g, 255, 255};
     } else if (x < x1) {
         auto b = static_cast<std::uint8_t>((x1 - x) / x0 * 255);
 
@@ -42,7 +42,7 @@ __device__ rgba8_t heat_lut(float x) {
     } else {
         auto b = static_cast<std::uint8_t>((1.f - x) / x0 * 255);
 
-        return rgba8_t{255, b, 0, 255};
+        return rgba8_t{0, b, 0, 255};
     }
 }
 
