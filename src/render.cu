@@ -48,9 +48,9 @@ rgba8_t heat_lut(float x) {
 
 __device__ int clamp(int a, int a1, int a2, int min, int max)
 {
-    int percentage = (a - a1) / (a1 - a2);
+    int percentage = (a - a2) / (a2 - a1);
 
-    return percentage * (min - max) + min;
+    return percentage * (max - min) + min;
 }
 
 // Device code
@@ -80,9 +80,9 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch) {
         ++i;
     }
 
-    uchar4* lineptr = (uchar4*)(buffer + y * pitch);
-    uint8_t v = 255 * x / n;
-    lineptr[x] = {v, v, v, 255};
+    uchar4* lineptr = (uchar4*)(buffer + my * pitch);
+    uint8_t v = 255 * i / n;
+    lineptr[mx] = {v, v, v, 255};
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations) {
